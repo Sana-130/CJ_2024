@@ -15,39 +15,46 @@ export const SignIn = () => {
 
 
   // Function that will return current user and also update current username
-  const doUserLogIn = async function (){
-    try {
-        const loggedInUser = await Parse.User.logIn(username, password);
-        
-        // logIn returns the corresponding ParseUser object
-        alert(
-          `Success! User ${loggedInUser.get(
-            'username'
-          )} has successfully signed in!`
-        );
-       
-        const currentUser = await Parse.User.current();
-        //setUser(currentUser.toJSON());
+  const doUserLogIn = async function () {
+  try {
+    // Validation: Check if username and password are not empty
+    if (!username || !password) {
+      alert('Username and password are required.');
+      return false;
+    }
+
+    const loggedInUser = await Parse.User.logIn(username, password);
+
+    // logIn returns the corresponding ParseUser object
+    alert(
+      `Success! User ${loggedInUser.get('username')} has successfully signed in!`
+    );
+
+    const currentUser = await Parse.User.current();
         setUser(currentUser); 
+        setUser(currentUser); 
+        // console.log(loggedInUser === currentUser);
+        // Clear input fields
+    setUser(currentUser);
         //console.log(loggedInUser === currentUser);
         // Clear input fields
-        setUsername('');
-        setPassword('');
-        // Update state variable holding current user
-        getCurrentUser();
-    
-        if(currentUser.toJSON().isAdmin == true){
-          navigate('/dashboard');
-        }else{
-          navigate('/home');
-        }
-        
-        return true;
-    }catch(err){
-        alert(`Error! ${err.message}`);
-        return false;
+    setUsername('');
+    setPassword('');
+    getCurrentUser();
+
+    if (currentUser.toJSON().isAdmin === true) {
+      navigate('/dashboard');
+    } else {
+      navigate('/home');
     }
+
+    return true;
+  } catch (err) {
+    alert(`Error! ${err.message}`);
+    return false;
   }
+};
+
 
   const getCurrentUser = async function () {
     const currentUser = await Parse.User.current();
@@ -55,12 +62,13 @@ export const SignIn = () => {
     setCurrentUser(currentUser);
     return currentUser;
   };
+  
 
   return (
     <div>
       <div className="header">
         <h1>CODE JAM</h1>
-        <p className="header_text_bold">{'Login'}</p>
+        {/* <p className="header_text_bold">{'Login'}</p> */}
       </div>
       <div className="container">
         <h2 className="heading">{'User Login'}</h2>

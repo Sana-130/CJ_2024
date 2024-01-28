@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -32,6 +35,10 @@
     animation: logo-spin infinite 20s linear;
   }
 }
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+}
 
 .card {
   padding: 2em;
@@ -39,4 +46,79 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 36px;
+  color: #208aec;
+  margin-bottom: 8px;
+}
+
+.header_text_bold {
+  font-weight: bold;
+  font-size: 18px;
+  color: #555;
+  align-items: center;
+}
+
+.container {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+
+}
+
+.heading {
+  font-size: 24px;
+  color: #208aec;
+  margin-bottom: 16px;
+}
+
+.form_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  /* Increased gap for a more spacious feel */
+  align-items: center;
+}
+
+.form_input {
+  width: 400px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form_input:focus {
+  border-color: #208aec;
+  /* Change border color on focus */
+}
+
+.form_buttons {
+  margin-top: 24px;
+}
+
+.form_button {
+  width: 400px;
+  background-color: #208aec;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.form_button:hover {
+  background-color: #106ba3;
+  /* Darker shade on hover */
 }
