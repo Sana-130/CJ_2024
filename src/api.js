@@ -23,8 +23,11 @@ export const fetchQues = async() => {
       const resultObj= {};
       results.forEach(item => {
         resultObj[item.id] = item;
+        let inp = item.get('input');
+        console.log(qs.parse(inp));
+        //console.log(qs.parse());
       });
-  
+      
      /* const questionsData = results.map((question) => ({
         id: question.id,
         title: question.get('title'),
@@ -109,6 +112,14 @@ export const getSubmissions = async (questionPointers) => {
   }
 };
 
+export const getUser = async (user_id) => {
+  const parseQuery = new Parse.Query('_User');
+    parseQuery.contains('objectId', user_id);
+    let queryResults = await parseQuery.find();
+    let user = queryResults[0];
+    return user;
+}
+
 export const getSubByQues = async(ques) => {
   try{
     
@@ -118,10 +129,11 @@ export const getSubByQues = async(ques) => {
     const submissions = await query.find();
     submissions.forEach((submission) => {
       let result = {};
-      let userObj = submission.get('user_id');
+      //let userObj = submission.get('user_id');
       result['id'] = submission.id;
-      result['regno'] = userObj.get('username');
-      result['name'] = userObj.get('name');
+      result['user'] = submission.get('user_id').id;
+      //result['regno'] = userObj.get('username');
+      //result['name'] = userObj.get('name');
       result['scored'] = submission.get('scored');
       const params = qs.parse(submission.get('code').codes);
       result['code'] = params.code;
@@ -164,6 +176,7 @@ export const addScore = async(subId, complexity) =>{
       const newObj= new Parse.Object('scores');
       newObj.set('user_id', user);
       newObj.set('score', map_score[complexity]);
+      newObj.set('username', user.get('username'));
       await newObj.save();
     }
     
@@ -177,13 +190,16 @@ export const addScore = async(subId, complexity) =>{
 export const deleteScore = async(subId, complexity, user) =>{
   const query = new Parse.Query('scores');
   const q = new Parse.Query('submissions');
-  query.equalTo('user_id', user);
+  query.contains('user_id', user);
   const result = await query.find();
+  console.log(result);
   result[0].increment('score', -(map_score[complexity]));
-  result.save();
+  await result[0].save();
   q.contains('objectId', subId);
   const result2 = await q.find();
-  result2.set('scored', false);
+  const res = result2[0];
+  res.set('scored', false);
+  await res.save();
   return true
 }
 
@@ -193,9 +209,30 @@ export const allScores = async() => {
   let data=[];
   results.forEach((result)=>{
     let res = {};
-    res['user'] = result.get('user_id');
+    res['user_id']= result.get('user_id').id;
+    res['username'] = result.get('username');
     res['score'] = result.get('score');
     data.push(res);
   })
   return data;
+}
+
+export const Details = async(user_id) => {
+  console.log(user_id);
+    // const parseQuery = new Parse.Query('_User');
+    // parseQuery.contains('objectId', user_id);
+    // let queryResults = await parseQuery.find();
+    // let user = queryResults[0];
+    const query = new Parse.Query('submissions');
+    query.contains('user_id', user_id);
+    const results= await query.find();
+    let data=[];
+    results.forEach((result) => {
+       let time = result.get('createdAt');
+       let localTime = new Date(time).toLocaleString();
+        data.push(localTime);
+        
+     })
+    return data;
+
 }

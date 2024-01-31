@@ -1,9 +1,12 @@
 import { useParams  } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useEffect, useState } from 'react';
-import { getSubByQues, addScore } from '../api';
+import { getSubByQues, addScore, getUser, deleteScore } from '../api';
 import { Input } from 'antd'
 import CodeEditorWindow from './editor';
+import CodeBlock from './CodeBlock';
+import qs from 'qs'
+import axios from 'axios';
 
 
 export const Submissions = () => {
@@ -15,6 +18,7 @@ export const Submissions = () => {
     const [code, setCode] = useState(null);
     const [disable, setDisable] = useState(false);
     const [output, setOutput] = useState('');
+    const [user, setUser ] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,6 +27,8 @@ export const Submissions = () => {
           }
             let sub = await getSubByQues(data[id]);
               if(sub){ 
+              let u = await getUser(sub[0].user);
+              setUser(u);
                 //console.log(sub);   
               setSubmissions(sub);
               setCode(sub[0].code);
@@ -48,20 +54,8 @@ export const Submissions = () => {
     
   }
 
-
-      const mapLang = {
-        c:'c',
-        cpp:'cpp',
-        java:'java',
-        python : 'py',
-        csharp: 'cs',
-        javascript: 'js'
-      }
-
       const onRun = () => {
         //console.log(code);
-        let lang = mapLang[selectedLanguage];
-        console.log(lang);
         var data = qs.stringify({
             'code':  code,//'print("hello")',
             'language':submissions[currentIndex].lang
@@ -87,16 +81,20 @@ export const Submissions = () => {
         });
       };
 
-      const handleNext = () => {
+      const handleNext = async() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % submissions.length);
         setCode(submissions[currentIndex + 1].code);
+        let res = await getUser(submissions[currentIndex + 1].user);
+        setUser(res);
       };
     
-      const handlePrev = () => {
+      const handlePrev = async() => {
         setCurrentIndex(
           (prevIndex) => (prevIndex - 1 + submissions.length) % submissions.length 
         );
         setCode(submissions[currentIndex - 1].code);
+        let res = await getUser(submissions[currentIndex - 1].user);
+        setUser(res);
       };
 
       const Addbtn = () => {
@@ -105,15 +103,33 @@ export const Submissions = () => {
         addScore(id , complexity)
         .then((success) => {
           if (success) {
-            console.log('success');
             setDisable(true);
+            alert('added score');
           }else{
-            console.log("already submitted");
+            alert('already addded score')
           }
         })
         .catch((error) => {
           console.error('Error adding score', error);
       });
+      }
+
+      const Undo = () => {
+        let complexity = ques.get('complexity');
+        let id = submissions[currentIndex].id;
+        deleteScore(id , complexity, submissions[currentIndex].user)
+        .then((success) => {
+          if (success) {
+            setDisable(false);
+            alert('undo done')
+          }else{
+            alert('there is nothing to undo')
+          }
+        })
+        .catch((error) => {
+          console.error('Error adding score', error);
+      });
+      
       }
 
       const onChange = (action, data) => {
@@ -130,22 +146,22 @@ export const Submissions = () => {
 
     return (
         <>
+        <div style={{display:'flex', flexDirection:'row'}}>
             {ques?(<div>
         <h1>{ques.get('title')}</h1>
         <p>{ques.get('description')}</p>
         <p>{ques.get('complexity')}</p>
+        <p>Expected Input</p>
+        <CodeBlock code={ decodeURIComponent(ques.get('input'))} id={`input`}/>
+        <p>Expected Output</p>
+        <CodeBlock code={decodeURIComponent(ques.get('output'))} id={`output`}/>
         </div>):
         (<p>oops not valid id </p>
         )}
-         
-
       {submissions && submissions.length > 0 && (
         <div>
           <h3>Total number of submissions : {submissions.length}</h3>
-          <h2>Submission Details</h2>
-          <p>{submissions[currentIndex].regno}</p>
-          <p>{submissions[currentIndex].name}</p>
-          <p>{submissions[currentIndex].code}</p>{/* Add other properties as needed */}
+          <p>Submission Details : {user ? user.get('username') : ''} - {user ? user.get('name') : ''} - {submissions[currentIndex].lang}</p>
           <button onClick={handlePrev} disabled={currentIndex === 0}>
             Previous
           </button>
@@ -155,26 +171,31 @@ export const Submissions = () => {
           <button onClick={Addbtn} disabled={submissions[currentIndex].scored || disable}>
             Add Score
           </button>
+          <button onClick={Undo} disabled={!(submissions[currentIndex].scored || disable)}>
+            Undo
+          </button>
           <button onClick={onRun}>Run</button>
+          <div style={{display:'flex', flexDirection:'column'}}>
           <CodeEditorWindow
             code={code}
             onChange={onChange}
             language={submissions[currentIndex].lang}
             theme={'vs-dark'}
           />
-          <div>
-        <label>Output:</label>
+      
         <Input.TextArea
           value={output}
-          autoSize={{ minRows: 3, maxRows: 10}}
+          autoSize={{ minRows: 15, maxRows: 15}}
           readOnly
-          style={{ height: '150px', overflowY: 'scroll' }}
+          style={{ width:'720px' , overflowY: 'scroll' , background:'black', border:'none', color:'white'}}
         />
+
           </div>
 
         </div>
+        
       )}
-      
+      </div>
 
         </>
     )   

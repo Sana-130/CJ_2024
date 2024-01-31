@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { fetchQues } from "../api";
 import Question from "./Question";
+import Logo from '../assets/logo.png'
 import { useData } from "../context/DataContext";
 
 
@@ -26,41 +27,42 @@ export const Home = () =>{
       useEffect(() => {
         fetchQuestionsData();
       }, []);
+
+      // style={{
+       // border: submission[key] ? '2px solid #4CAF50' : '2px solid #E74C3C',
+      //}}
      
     return (
       <>
-      <h1>hello {userObj.name}</h1>
-      <Link to="/dashboard">Go to Dashboard</Link>
-      <Link to="/admin">Admin</Link>
-      <div>
-        <h2>Questions</h2>
+      
+       <div className="header">
+        <h1>CODE JAM </h1> <img src={Logo} alt="Code Jam Image" width="80px" height="95px" /><h2>hello {userObj.name}</h2>
+        <ul style={{listStyle:'none'}}><li><b>Score Board</b></li><li>Easy   -  200 </li><li>Medium - 400</li><li>Hard - 800</li></ul>
+        </div>
+     
         {data ? (
-          <ul>
+          <data className="grid-container">
             {Object.keys(data).map((key) => {
               return (
-               
-                <li key={key}>
                   <div
-                  style={{
-                    border: submission[key] ? '2px solid green' : '2px solid red',
-                    padding: '10px',
-                    margin: '10px',
-                  }}>
+                  key={key}
+                  className="box"
+                 >
                      <Link to={`/question/${key}`}>
                     <Question
                       title={data[key].get('title')}
                       complexity={data[key].get('complexity')}
+                      done={ submission[key] }
                     />
                     </Link>
                   </div>
-                </li>
               );
             })}
-          </ul>
+         </data>
         ) : (
           <p>No data available</p>
         )}
-      </div>
+      
     </>
     );
 }

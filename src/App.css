@@ -1,30 +1,43 @@
-#root {
-  max-width: 1280px;
+.grid-container {
+  margin:0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Three columns, equally sized */
+  grid-template-rows: repeat(3, 130px); /* Three rows, 150px each (adjust as needed) */
+  gap: 40px;
+  margin-left: 30px; /* Spacing between boxes and rows */
+}
+
+.box {
+  background-color: #1a1a1a; /*#571448;*/
+  padding: 20px;
+  border-radius: 5px;
+  display: flex; /* For centering content vertically */
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #C92C92;
+  display:flex;
+  flex-direction: column; /* Default border color */
+}
+
+.box:hover {
+ /* background-color:#132d50; */
+  border-color: blue; /* Hover border color */
+}
+
+.header {
+  display: flex;
+   /* Enables flexible layout for aligning elements inside */
+  justify-content: center; /* Aligns content horizontally within the element */
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  color:rgb(206, 190, 169);
+  gap:15px;
+  margin-bottom: 30px; /* Adds equal margin on both sides for centering */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.text{
+  color:rgb(206, 190, 169);
 }
 
 @media (prefers-reduced-motion: no-preference) {

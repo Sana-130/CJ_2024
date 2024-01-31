@@ -31,6 +31,7 @@ export const SignUp = () => {
 
   return (
     <div>
+      <div className="setup">
       <div className="header">
         <h1>CODE JAM </h1>
       </div>
@@ -75,6 +76,7 @@ export const SignUp = () => {
           </Button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

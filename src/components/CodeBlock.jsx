@@ -11,14 +11,16 @@ const CodeBlock = ({ code }) => {
   }, [code]);
 
   return (
-    <textarea
+    <textarea cols="40"
       ref={textareaRef}
       value={code}
       readOnly // If you want to prevent manual editing
       style={{
         background: 'black',
         overflow: 'hidden', // Prevent vertical scroll (optional)
-        resize: 'none', // Disable resizing
+        resize: 'none',
+        border:'none',
+        color:'green' // Disable resizing
       }}
     />
   );

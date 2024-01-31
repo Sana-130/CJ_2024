@@ -23,35 +23,40 @@ export const Admin = () => {
         fetchQuestionsData();
       }, []);
 
-
-    return (
-        <>
-        {isAdmin? (
-        <div>
-          <Link to="/home">Go to home</Link>
-        <h2>Questions</h2>
-        {data ? (
-          <ul>
-            {Object.keys(data).map((key) => {
-              return (
-                <li key={key}>
-                  <div>
-                  <Link to={`/submissions/${key}`}>
-                    <Question
-                      title={data[key].get('title')}
-                      complexity={data[key].get('complexity')}
-                    />
-                </Link>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <p>No data available</p>
-        )}
-      </div>
-      ):(<p>There's nothing to see here: 404!</p>)}
-        </>
-    )
-}
+  return (
+    <>
+      {isAdmin ? (
+        <div style={{ paddingLeft: "0px" }}>
+          <button>
+          <Link to="/scores" style={{ textDecoration: "none", color: "inherit",paddingBottom:"300px" }}>
+              View ScoreBoard
+            </Link>
+          </button>
+          <h2>Questions</h2>
+          {data ? (
+            <ul style={{ textAlign: "left" }}>
+              {Object.keys(data).map((key) => {
+                return (
+                  <li key={key}>
+                    <div>
+                      <Link to={`/submissions/${key}`}>
+                        <Question
+                          title={data[key].get("title")}
+                          complexity={data[key].get("complexity")}
+                        />
+                      </Link>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p>No data available</p>
+          )}
+        </div>
+      ) : (
+        <p>There's nothing to see here: 404!</p>
+      )}
+    </>
+  );
+};
