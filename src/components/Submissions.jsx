@@ -16,7 +16,6 @@ export const Submissions = () => {
     const [submissions, setSubmissions] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [code, setCode] = useState(null);
-    const [disable, setDisable] = useState(false);
     const [output, setOutput] = useState('');
     const [user, setUser ] = useState(null);
 
@@ -112,7 +111,6 @@ export const Submissions = () => {
         addScore(id , complexity)
         .then((success) => {
           if (success) {
-            setDisable(true);
             alert('added score');
           }else{
             alert('already addded score')
@@ -129,7 +127,6 @@ export const Submissions = () => {
         deleteScore(id , complexity, submissions[currentIndex].user)
         .then((success) => {
           if (success) {
-            setDisable(false);
             alert('undo done')
           }else{
             alert('there is nothing to undo')

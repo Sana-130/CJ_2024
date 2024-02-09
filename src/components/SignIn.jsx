@@ -60,7 +60,6 @@ export const SignIn = () => {
     <div>
       <div className="header">
         <h1>CODE JAM</h1>
-        <p className="header_text_bold">{'Login'}</p>
       </div>
       <div className="container">
         <h2 className="heading">{'User Login'}</h2>
