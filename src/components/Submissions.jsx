@@ -54,13 +54,21 @@ export const Submissions = () => {
     
   }
 
+  const mapLang = {
+    c:'c',
+    cpp:'cpp',
+    java:'java',
+    python : 'py',
+    csharp: 'cs',
+    javascript: 'js'
+  }
+
       const onRun = () => {
         //console.log(code);
         var data = qs.stringify({
             'code':  code,//'print("hello")',
-            'language':submissions[currentIndex].lang
+            'language':mapLang[submissions[currentIndex].lang]
         });
-        console.log(data);
         var config = {
             method: 'post',
             url: 'https://codex-api.fly.dev/',
@@ -72,7 +80,7 @@ export const Submissions = () => {
     
         axios(config)
         .then(function (response) {
-            //console.log(JSON.stringify(response.data));
+            console.log(JSON.stringify(response.data));
             checkStatus(response.data);
             
         })
@@ -86,6 +94,7 @@ export const Submissions = () => {
         setCode(submissions[currentIndex + 1].code);
         let res = await getUser(submissions[currentIndex + 1].user);
         setUser(res);
+        setDisable(false);
       };
     
       const handlePrev = async() => {
@@ -168,10 +177,10 @@ export const Submissions = () => {
           <button onClick={handleNext} disabled={currentIndex === submissions.length - 1}>
             Next
           </button>
-          <button onClick={Addbtn} disabled={submissions[currentIndex].scored || disable}>
+          <button onClick={Addbtn} disabled={submissions[currentIndex].scored}>
             Add Score
           </button>
-          <button onClick={Undo} disabled={!(submissions[currentIndex].scored || disable)}>
+          <button onClick={Undo} disabled={!(submissions[currentIndex].scored)}>
             Undo
           </button>
           <button onClick={onRun}>Run</button>

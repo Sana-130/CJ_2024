@@ -20,7 +20,7 @@ export const UserSub = () => {
 
   return (
     <div>
-      <h2>User Submissions</h2>
+      <h2>User Submissions : total - {submissions.length}</h2>
       <ul>
         {submissions.map((submission, index) => (
           <li key={index}>{submission}</li>

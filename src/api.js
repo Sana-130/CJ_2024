@@ -23,8 +23,6 @@ export const fetchQues = async() => {
       const resultObj= {};
       results.forEach(item => {
         resultObj[item.id] = item;
-        let inp = item.get('input');
-        console.log(qs.parse(inp));
         //console.log(qs.parse());
       });
       
@@ -71,17 +69,18 @@ export const submitCode = async(code, lang, user, question)=>{
         alert("You have already submitted.");
         return false;
       } else {
-        console.log("you are submitting now", question);
+    
         const cleaned = qs.stringify(
           {'code':  code,
             'lang':  lang
           });
-        console.log(cleaned);
+   
         const obj = new Parse.Object('submissions');
         //console.log(user_id, question_id);
         obj.set('user_id', user);
         obj.set('question_id', question);
         obj.set('code', {codes: cleaned});
+        obj.set('scored', false);
     
         // Make sure the function is marked as async to use 'await'
         await obj.save();
@@ -164,21 +163,20 @@ export const addScore = async(subId, complexity) =>{
   if(subObj.get('scored')==true){
     return false;
   }else{
-    console.log('finised first');
+
     let user= subObj.get('user_id');
     const q = new Parse.Query('scores');
     q.equalTo('user_id', user);
     const exists = await q.find();
-    if(exists[0]){
-      exists[0].increment('score', map_score[complexity]);
-      await exists[0].save();
-    }else{
-      const newObj= new Parse.Object('scores');
-      newObj.set('user_id', user);
-      newObj.set('score', map_score[complexity]);
-      newObj.set('username', user.get('username'));
-      await newObj.save();
-    }
+    //if(exists[0]){
+    exists[0].increment('score', map_score[complexity]);
+    await exists[0].save();
+    //}else{
+    //  const newObj= new Parse.Object('scores');
+     // newObj.set('user_id', user);
+    //  newObj.set('score', map_score[complexity]);
+    //  newObj.set('username', user.get('username'));
+    //  await newObj.save();
     
     subObj.set('scored', true);
     await subObj.save();
@@ -192,7 +190,6 @@ export const deleteScore = async(subId, complexity, user) =>{
   const q = new Parse.Query('submissions');
   query.contains('user_id', user);
   const result = await query.find();
-  console.log(result);
   result[0].increment('score', -(map_score[complexity]));
   await result[0].save();
   q.contains('objectId', subId);
@@ -218,7 +215,6 @@ export const allScores = async() => {
 }
 
 export const Details = async(user_id) => {
-  console.log(user_id);
     // const parseQuery = new Parse.Query('_User');
     // parseQuery.contains('objectId', user_id);
     // let queryResults = await parseQuery.find();

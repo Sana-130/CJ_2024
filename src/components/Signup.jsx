@@ -12,6 +12,11 @@ const doUserRegistration = async function (username, password, name) {
     Person.set('password', password);
     try {
       await Person.save();
+      const newObj= new Parse.Object('scores');
+      newObj.set('user_id', Person);
+      newObj.set('score', 0);
+      newObj.set('username', Person.get('name'));
+      await newObj.save();
       alert(
         `Success! User was successfully created!`
       );

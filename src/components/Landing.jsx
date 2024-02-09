@@ -42,7 +42,6 @@ export const Landing = () => {
       } catch (error) {
         console.error('Error fetching question details:', error.message);
       }*/
-      console.log(data);
       if(data[id]){
         setQuestion(data[id]);
       }
@@ -53,7 +52,6 @@ export const Landing = () => {
 
   const handleLanguageChange = (value) => {
     setSelectedLanguage(value);
-    console.log(value);
     setCode(snippets[mapLang[value]]);
   };
 
@@ -110,12 +108,11 @@ export const Landing = () => {
   const onRun = () => {
     //console.log(code);
     let lang = mapLang[selectedLanguage];
-    console.log(lang);
     var data = qs.stringify({
         'code':  code,//'print("hello")',
         'language': lang
     });
-    console.log(data);
+
     var config = {
         method: 'post',
         url: 'https://codex-api.fly.dev/',
@@ -147,13 +144,10 @@ export const Landing = () => {
     
     {question?(
       <div style={{width:'450px'}}>
-        <button><Link to="/home">View Other Questions</Link></button>
+        <Link to="/home"><button>View Other Questions</button></Link>
     <div>
-      <h2>The Damn Secret</h2>
-      <p>Given a set of numbers, return the additive inverse of each. Each positive becomes negatives, and the negatives become positives
-      Given a set of numbers, return the additive inverse of each. Each positive becomes negatives, and the negatives become positives
-      Given a set of numbers, return the additive inverse of each. Each positive becomes negatives, and the negatives become positives
-      Given a set of numbers, return the additive inverse of each. Each positive becomes negatives, and the negatives become positives.</p>
+      <h2>{question.get('title')}</h2>
+      <p>{question.get('description')}</p>
       <b>level - {question.get('complexity')}</b>
     </div>
   

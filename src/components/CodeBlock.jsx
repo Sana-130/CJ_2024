@@ -20,7 +20,8 @@ const CodeBlock = ({ code }) => {
         overflow: 'hidden', // Prevent vertical scroll (optional)
         resize: 'none',
         border:'none',
-        color:'green' // Disable resizing
+        color:'green',
+        fontSize: '16px' // Disable resizing
       }}
     />
   );
